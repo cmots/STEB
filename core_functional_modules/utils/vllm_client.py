@@ -315,8 +315,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Quick test for reading a parquet/jsonl file (focus on base.parquet audio).")
     parser.add_argument(
         "input_path",
-        nargs="?",
-        default="/home/tione/public/datasets/audio/ytdp//0008_ximalaya/chinese/ytdp_0008_ximalaya_zh000167_144h_arks_parquets/0_000000008.base.parquet",
         help="Path to parquet/jsonl to test reading",
     )
     args = parser.parse_args()

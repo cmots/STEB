@@ -10,7 +10,7 @@ from ._llm_utils import get_vllm_client, extract_json
 from ._prompt_versions import DEFAULT_PROMPT_VERSION, select_prompt, versioned_name
 
 
-EMOTION_SYSTEM_PROMPT_V4_CHOICE = """You are an expert evaluator for speech emotion similarity in speech-to-speech translation systems.
+EMOTION_SYSTEM_PROMPT_DEFAULT = """You are an expert evaluator for speech emotion similarity in speech-to-speech translation systems.
 
 Your task: Compare the reference emotion description with the hypothesis emotion description using a fixed primary emotion pool. Judge only vocal expression, not semantic content.
 
@@ -33,11 +33,11 @@ Return ONLY a JSON object with exactly these fields:
 {"source_label": "...", "hypothesis_label": "...", "source_secondary": "...", "hypothesis_secondary": "...", "score": <int 1-5>, "reason": "..."}"""
 
 EMOTION_SYSTEM_PROMPTS = {
-    DEFAULT_PROMPT_VERSION: EMOTION_SYSTEM_PROMPT_V4_CHOICE,
+    DEFAULT_PROMPT_VERSION: EMOTION_SYSTEM_PROMPT_DEFAULT,
 }
 
 # Backward-compatible constant name for external imports.
-EMOTION_SYSTEM_PROMPT = EMOTION_SYSTEM_PROMPT_V4_CHOICE
+EMOTION_SYSTEM_PROMPT = EMOTION_SYSTEM_PROMPT_DEFAULT
 
 
 def build_emotion_prompt(

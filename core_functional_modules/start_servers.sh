@@ -2,8 +2,8 @@
 
 set -e
 
-qwen3_caption_model_path="${QWEN3_CAPTION_MODEL_PATH:-/home/tione/notebook/model/qwen3-omni}"
-qwen3_30_model_path="${QWEN3_INSTRUCT_MODEL_PATH:-/home/tione/notebook/model/qwen3-30B}"
+qwen3_caption_model_path="${QWEN3_CAPTION_MODEL_PATH:-}"
+qwen3_30_model_path="${QWEN3_INSTRUCT_MODEL_PATH:-}"
 
 VLLM_MAX_NUM_SEQS=${VLLM_MAX_NUM_SEQS:-80}
 CAPTIONER_MAX_NUM_SEQS=${CAPTIONER_MAX_NUM_SEQS:-$VLLM_MAX_NUM_SEQS}
@@ -19,6 +19,16 @@ VLLM_ATTENTION_BACKEND=${VLLM_ATTENTION_BACKEND:-${ATTENTION_BACKEND:-ROCM_ATTN}
 export VLLM_USE_TRITON_FLASH_ATTN
 export VLLM_ROCM_USE_AITER
 
+require_model_path() {
+    local value="${1:?value is required}"
+    local env_name="${2:?env name is required}"
+
+    if [ -z "$value" ]; then
+        echo "ERROR: ${env_name} must be set to a local model path or Hugging Face model id." >&2
+        exit 1
+    fi
+}
+
 qwen_vllm_extra_args=(--attention-backend "$VLLM_ATTENTION_BACKEND")
 if [ -n "$VLLM_COMPILATION_MODE" ]; then
     qwen_vllm_extra_args+=(--compilation-config "{\"mode\": ${VLLM_COMPILATION_MODE}}")
@@ -28,6 +38,8 @@ if [ "$VLLM_ENFORCE_EAGER" = "1" ]; then
 fi
 
 if [ "$1" = "captioner_multi" ]; then
+    require_model_path "$qwen3_caption_model_path" "QWEN3_CAPTION_MODEL_PATH"
+
     NUM_INSTANCES=${2:-1}
     START_PORT=${CAPTION_BASE_PORT:-8901}
     GPU_OFFSET=${GPU_OFFSET:-0}
@@ -61,6 +73,8 @@ if [ "$1" = "captioner_multi" ]; then
 fi
 
 if [ "$1" = "instruct_multi" ]; then
+    require_model_path "$qwen3_30_model_path" "QWEN3_INSTRUCT_MODEL_PATH"
+
     NUM_INSTANCES=${2:-1}
     START_PORT=${INSTRUCT_BASE_PORT:-9001}
     GPU_OFFSET=${GPU_OFFSET:-0}

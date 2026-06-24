@@ -5,7 +5,7 @@ import os
 
 RESOURCES_FOLDER = os.environ.get(
     "PRETRAINED_SED_RESOURCES",
-    "/home/tione/public/models/Pretrained_SED/",
+    os.path.join(os.path.expanduser("~"), ".cache", "steb", "pretrained_sed"),
 )
 GITHUB_RELEASE_URL = "https://github.com/fschmid56/PretrainedSED/releases/download/v0.0.1/"
 

@@ -1,0 +1,39 @@
+[project]
+name = "steb"
+version = "0.1.0"
+description = "Automatic evaluation toolkit for speech-to-speech translation systems."
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+dependencies = [
+    "aiohttp",
+    "dcase-util",
+    "librosa",
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "qwen-omni-utils",
+    "requests",
+    "sacrebleu",
+    "scipy",
+    "sed-scores-eval",
+    "soundfile",
+    "torch",
+    "torchaudio",
+    "tqdm",
+    "transformers",
+    "vllm==0.23.0",
+    "zhconv",
+    "zhon",
+]
+
+[project.optional-dependencies]
+speaker-sim = [
+    "fairseq==0.12.2",
+    "fire",
+    "omegaconf",
+    "packaging",
+    "s3prl==0.3.1",
+]
+
+[tool.uv]
+package = false

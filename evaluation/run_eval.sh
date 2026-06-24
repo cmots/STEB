@@ -11,8 +11,8 @@ set -e
 # ==============================================================================
 
 # --- Input ---
-BENCHMARK_FILE="${BENCHMARK_FILE:-/home/tione/notebook/project/ms-step-audio-2-s2st/benchmark/examples/normal.jsonl}"
-RESULTS_FILE="${RESULTS_FILE:-/home/tione/notebook/project/ms-step-audio-2-s2st/benchmark/examples/output/base/no_think/results_normal.jsonl}"
+BENCHMARK_FILE="${BENCHMARK_FILE:-}"
+RESULTS_FILE="${RESULTS_FILE:-}"
 OUTPUT_DIR="${OUTPUT_DIR:-}"                # Output directory
 SPLIT="${SPLIT:-normal}"
 SRC_LANG="${SRC_LANG:-zh}"
@@ -53,8 +53,8 @@ ASR_ENFORCE_EAGER="${ASR_ENFORCE_EAGER:-0}"
 ASR_VLLM_ROCM_USE_AITER="${ASR_VLLM_ROCM_USE_AITER:-${VLLM_ROCM_USE_AITER:-}}"
 
 # --- Model Paths ---
-BASE_COMET_MODEL="${BASE_COMET_MODEL:-/home/tione/notebook/model/comet/models--Unbabel--wmt22-comet-da}"
-XCOMET_MODEL="${XCOMET_MODEL:-/home/tione/public/models/XCOMET-XL}"
+BASE_COMET_MODEL="${BASE_COMET_MODEL:-}"
+XCOMET_MODEL="${XCOMET_MODEL:-}"
 COMET_QE_MODEL="${COMET_QE_MODEL:-}"            # Optional QE model for base COMET; leave empty to compute ref-only
 
 # --- Feature Flags ---
@@ -71,10 +71,10 @@ SLC_THRESHOLDS="${SLC_THRESHOLDS:-0.2,0.4}"
 LLM_CONCURRENCY="${LLM_CONCURRENCY:-100}"
 TEXT_CLIENT_CONCURRENCY="${TEXT_CLIENT_CONCURRENCY:-$LLM_CONCURRENCY}"
 LLM_ENSEMBLE_RUNS="${LLM_ENSEMBLE_RUNS:-3}"
-LLM_ENSEMBLE_STRATEGY="${LLM_ENSEMBLE_STRATEGY:-v4}"
-LLM_PROMPT_VERSION="${LLM_PROMPT_VERSION:-v4_choice}"
-EXTERNAL_HTTP_PROXY="${EXTERNAL_HTTP_PROXY:-http://10.11.18.103:8118}"
-EXTERNAL_HTTPS_PROXY="${EXTERNAL_HTTPS_PROXY:-http://10.11.18.103:8118}"
+LLM_ENSEMBLE_STRATEGY="${LLM_ENSEMBLE_STRATEGY:-robust}"
+LLM_PROMPT_VERSION="${LLM_PROMPT_VERSION:-default}"
+EXTERNAL_HTTP_PROXY="${EXTERNAL_HTTP_PROXY:-}"
+EXTERNAL_HTTPS_PROXY="${EXTERNAL_HTTPS_PROXY:-}"
 LOCAL_NO_PROXY="${LOCAL_NO_PROXY:-127.0.0.1,localhost}"
 
 # --- Phase Control ---
@@ -223,6 +223,14 @@ fi
 
 if [ "$AUTO_START_INSTRUCT_SERVERS" = "1" ]; then
     validate_positive_int "$INSTRUCT_GPU_COUNT" "INSTRUCT_GPU_COUNT"
+fi
+
+if [ "$PHASE2_ENABLED" -eq 1 ] && [ "$SKIP_PHASE2_ASR" != "1" ]; then
+    if [ -z "$ASR_MODEL_PATH" ] || [ -z "$ALIGNER_MODEL_PATH" ]; then
+        echo "ERROR: ASR_MODEL_PATH and ALIGNER_MODEL_PATH must be set when Phase 2 ASR runs." >&2
+        echo "       Set both variables, or use SKIP_PHASE2_ASR=1 if ASR outputs already exist." >&2
+        exit 1
+    fi
 fi
 
 if [ -n "$ENABLE_SPEAKER_SIM" ]; then

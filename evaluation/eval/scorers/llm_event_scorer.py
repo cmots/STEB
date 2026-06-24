@@ -10,7 +10,7 @@ from ._llm_utils import get_vllm_client, extract_json
 from ._prompt_versions import DEFAULT_PROMPT_VERSION, select_prompt, versioned_name
 
 
-EVENT_SYSTEM_PROMPT_V4_CHOICE = """\
+EVENT_SYSTEM_PROMPT_DEFAULT = """\
 You are an expert evaluator for sound event similarity in speech-to-speech translation systems.
 
 Your task: Compare reference and hypothesis sound events using a fixed event
@@ -36,11 +36,11 @@ Return ONLY a JSON object with exactly these fields:
 {"reference_events": [...], "hypothesis_events": [...], "score": <int 1-5>, "reason": "..."}"""
 
 EVENT_SYSTEM_PROMPTS = {
-    DEFAULT_PROMPT_VERSION: EVENT_SYSTEM_PROMPT_V4_CHOICE,
+    DEFAULT_PROMPT_VERSION: EVENT_SYSTEM_PROMPT_DEFAULT,
 }
 
 # Backward-compatible constant name for external imports.
-EVENT_SYSTEM_PROMPT = EVENT_SYSTEM_PROMPT_V4_CHOICE
+EVENT_SYSTEM_PROMPT = EVENT_SYSTEM_PROMPT_DEFAULT
 
 
 def build_event_prompt(

@@ -1,8 +1,7 @@
-"""Experiment D: Ensemble wrapper — runs any scorer N times and aggregates.
+"""Repeated-run scorer wrapper for stochastic metrics.
 
-Supports median (default), mean (float, no rounding), majority (mode), and
-v4 (the fixed outlier-aware aggregation used for the v4 judge scheme).
-Early stopping: if ceil(N/2) runs produce the same score, skip remaining runs.
+Supports median, mean, majority, and robust aggregation.
+Early stopping skips remaining runs when a majority score is already decided.
 """
 from __future__ import annotations
 
@@ -18,8 +17,8 @@ SCORE_FIELDS = ("emotion_score", "style_score", "event_score")
 REASON_FIELDS = ("emotion_reason", "style_reason", "event_reason")
 
 
-def _aggregate_v4(scores: List[float | int]) -> Optional[float | int]:
-    """Aggregate three-run judge scores with the v4 outlier rule.
+def _aggregate_robust(scores: List[float | int]) -> Optional[float | int]:
+    """Aggregate three-run judge scores with a robust rule.
 
     Rule:
     - If two scores agree and the third differs by at least 2, keep the agreed
@@ -67,8 +66,8 @@ def aggregate_scores(
         if len(modes) == 1:
             return modes[0]
         return statistics.median(scores)  # tie → median fallback
-    if strategy == "v4":
-        return _aggregate_v4(scores)
+    if strategy == "robust":
+        return _aggregate_robust(scores)
     raise ValueError(f"Unknown aggregation strategy: {strategy}")
 
 

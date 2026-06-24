@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Mapping, TypeVar
 
 
-DEFAULT_PROMPT_VERSION = "v4_choice"
+DEFAULT_PROMPT_VERSION = "default"
 SUPPORTED_PROMPT_VERSIONS = (DEFAULT_PROMPT_VERSION,)
 
 _T = TypeVar("_T")

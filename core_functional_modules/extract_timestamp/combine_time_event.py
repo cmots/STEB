@@ -1,6 +1,4 @@
-"""
-将timestamp与event结合起来，将text中混合音频事件
-"""
+"""Combine word timestamps with detected events and insert event tags into text."""
 
 import os
 import re

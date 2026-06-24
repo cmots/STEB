@@ -213,15 +213,15 @@ def run_metric_group_locally(
         llm_model = args.llm_model or "Qwen/Qwen3-30B-A3B-Instruct"
         llm_conc = args.llm_concurrency
         llm_runs = int(getattr(args, "llm_ensemble_runs", 3))
-        llm_strategy = getattr(args, "llm_ensemble_strategy", "v4")
-        llm_prompt_version = getattr(args, "llm_prompt_version", "v4_choice")
+        llm_strategy = getattr(args, "llm_ensemble_strategy", "robust")
+        llm_prompt_version = getattr(args, "llm_prompt_version", "default")
 
         if not getattr(args, "disable_llm_emotion", False):
             from scorers.llm_emotion_scorer import LLMEmotionScorer
 
             print(
                 f"[Phase 5] Running LLM Emotion scorer "
-                f"({llm_runs}-run {llm_strategy}, prompt={llm_prompt_version})..."
+                f"({llm_runs} repeated run(s), aggregation={llm_strategy})..."
             )
             scorer = EnsembleScorer(
                 LLMEmotionScorer(
@@ -240,7 +240,7 @@ def run_metric_group_locally(
 
             print(
                 f"[Phase 5] Running LLM Style scorer "
-                f"({llm_runs}-run {llm_strategy}, prompt={llm_prompt_version})..."
+                f"({llm_runs} repeated run(s), aggregation={llm_strategy})..."
             )
             scorer = EnsembleScorer(
                 LLMStyleScorer(
@@ -259,7 +259,7 @@ def run_metric_group_locally(
 
             print(
                 f"[Phase 5] Running LLM Event scorer "
-                f"({llm_runs}-run {llm_strategy}, prompt={llm_prompt_version})..."
+                f"({llm_runs} repeated run(s), aggregation={llm_strategy})..."
             )
             scorer = EnsembleScorer(
                 LLMEventScorer(
@@ -348,8 +348,8 @@ def build_subprocess_command(
         cmd.extend(["--llm_model", args.llm_model])
     cmd.extend(["--llm_concurrency", str(args.llm_concurrency)])
     cmd.extend(["--llm_ensemble_runs", str(getattr(args, "llm_ensemble_runs", 3))])
-    cmd.extend(["--llm_ensemble_strategy", getattr(args, "llm_ensemble_strategy", "v4")])
-    cmd.extend(["--llm_prompt_version", getattr(args, "llm_prompt_version", "v4_choice")])
+    cmd.extend(["--llm_ensemble_strategy", getattr(args, "llm_ensemble_strategy", "robust")])
+    cmd.extend(["--llm_prompt_version", getattr(args, "llm_prompt_version", "default")])
     return cmd
 
 
@@ -585,10 +585,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--llm_ensemble_runs", type=int, default=3)
     p.add_argument(
         "--llm_ensemble_strategy",
-        choices=["median", "mean", "majority", "v4"],
-        default="v4",
+        default="robust",
+        help="Aggregation strategy for repeated LLM judging: robust, median, mean, or majority.",
     )
-    p.add_argument("--llm_prompt_version", default="v4_choice")
+    p.add_argument("--llm_prompt_version", default="default")
     # SLC
     p.add_argument("--slc_thresholds", default="0.2,0.4")
     p.add_argument("--isolate_metric_groups", action="store_true")

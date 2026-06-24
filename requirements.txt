@@ -1,5 +1,5 @@
 aiohttp
-dcase_util
+dcase-util
 librosa
 numpy
 pandas
@@ -8,13 +8,12 @@ qwen-omni-utils
 requests
 sacrebleu
 scipy
-sed_scores_eval
+sed-scores-eval
 soundfile
 torch
 torchaudio
 tqdm
 transformers
-unbabel-comet
-vllm
+vllm==0.23.0
 zhconv
 zhon

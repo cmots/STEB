@@ -371,12 +371,12 @@ def main():
     )
     parser.add_argument(
         "--asr_model_path",
-        default="/home/tione/public/models/Qwen3-ASR/Qwen3-ASR-1.7B",
+        default=os.environ.get("ASR_MODEL_PATH", ""),
         help="Path to Qwen3-ASR model",
     )
     parser.add_argument(
         "--aligner_model_path",
-        default="/home/tione/public/models/Qwen3-ASR/Qwen3-ForcedAligner-0.6B",
+        default=os.environ.get("ALIGNER_MODEL_PATH", ""),
         help="Path to Qwen3-ForcedAligner model",
     )
     parser.add_argument(
@@ -395,6 +395,12 @@ def main():
     )
 
     args = parser.parse_args()
+
+    if not args.asr_model_path or not args.aligner_model_path:
+        parser.error(
+            "--asr_model_path and --aligner_model_path are required "
+            "(or set ASR_MODEL_PATH and ALIGNER_MODEL_PATH)."
+        )
 
     if args.meta_output_dir is None:
         args.meta_output_dir = args.output_dir + "_meta"

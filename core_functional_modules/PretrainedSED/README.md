@@ -13,9 +13,9 @@ python core_functional_modules/PretrainedSED/batch_inference.py \
   --cuda
 ```
 
-Only the BEATs strong checkpoint path is included in this release. Set
-`PRETRAINED_SED_RESOURCES` if the checkpoint directory is not
-`/home/tione/public/models/Pretrained_SED/`.
+Only the BEATs strong checkpoint path is included in this release. By default,
+checkpoints are cached under `~/.cache/steb/pretrained_sed`. Set
+`PRETRAINED_SED_RESOURCES` to use a different checkpoint directory.
 
 The retained BEATs implementation is derived from PretrainedSED. See
 `LICENSE` in this directory for the upstream license.

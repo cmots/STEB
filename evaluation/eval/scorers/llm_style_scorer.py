@@ -10,7 +10,7 @@ from ._llm_utils import get_vllm_client, extract_json
 from ._prompt_versions import DEFAULT_PROMPT_VERSION, select_prompt, versioned_name
 
 
-STYLE_SYSTEM_PROMPT_V4_CHOICE = """You are an expert evaluator for speech style similarity in speech-to-speech translation systems.
+STYLE_SYSTEM_PROMPT_DEFAULT = """You are an expert evaluator for speech style similarity in speech-to-speech translation systems.
 
 Your task: Compare reference and hypothesis style descriptions using a fixed scene/media-genre pool. Judge from vocal delivery and production cues, not the text topic.
 
@@ -30,11 +30,11 @@ Return ONLY a JSON object with exactly these fields:
 {"source_scene": "...", "hypothesis_scene": "...", "source_confidence": "...", "hypothesis_confidence": "...", "score": <int 1-5>, "reason": "..."}"""
 
 STYLE_SYSTEM_PROMPTS = {
-    DEFAULT_PROMPT_VERSION: STYLE_SYSTEM_PROMPT_V4_CHOICE,
+    DEFAULT_PROMPT_VERSION: STYLE_SYSTEM_PROMPT_DEFAULT,
 }
 
 # Backward-compatible constant name for external imports.
-STYLE_SYSTEM_PROMPT = STYLE_SYSTEM_PROMPT_V4_CHOICE
+STYLE_SYSTEM_PROMPT = STYLE_SYSTEM_PROMPT_DEFAULT
 
 
 def build_style_prompt(
