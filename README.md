@@ -1,17 +1,23 @@
 # STEB
 
 Official code release for **STEB**: A Speech-to-Speech Translation Expressiveness Benchmark for Evaluating Beyond Translation Fidelity, an automatic evaluation toolkit for
-speech-to-speech translation systems. The repository provides the evaluation
-pipeline, feature extraction modules, and metric implementations used to score
-translation fidelity and **emotion**/**scenario style**/**NV** preservation.
+speech-to-speech translation systems. 
 
 <p align="center">
 <a href="https://arxiv.org/pdf/2606.25529"><img src="https://img.shields.io/badge/Paper-ArXiv-red" alt="paper"></a>
 <a href="https://cmots.github.io/steb.github.io/"><img src="https://img.shields.io/badge/Demo-Page-lightgrey" alt="version"></a>
-<a href=https://huggingface.co/datasets/cmots/STEB><img src="https://img.shields.io/badge/Hugging%20Face-Dataset-yellow" alt="Dataset"></a>
+<a href="https://huggingface.co/datasets/cmots/STEB"><img src="https://img.shields.io/badge/Hugging%20Face-Dataset-yellow" alt="Dataset"></a>
 </p>
 
+The repository provides the evaluation
+pipeline, feature extraction modules, and metric implementations used to score
+translation fidelity and **emotion**/**scenario style**/**NV** preservation.
+
 ## Overview
+
+<img src="src/teaser.jpg" width="70% " align="center" alt="The overview of STEB benchmark" />
+
+*Figure 1. The overview of STEB benchmark and performance of S2ST systems.*
 
 STEB evaluates speech-to-speech translation outputs from both text and audio
 signals. Given benchmark metadata, reference annotations, and model-generated
@@ -19,10 +25,6 @@ hypothesis audio, the pipeline builds unified evaluation records, extracts
 hypothesis-side audio features, and reports sentence-level and corpus-level
 scores.
 
-The current release focuses on the automatic evaluation code and provides a
-`uv`-based setup for the default vLLM-backed evaluation workflow. Optional
-COMET/XCOMET and speaker-similarity workflows require isolated environments
-because their upstream dependencies conflict with the modern vLLM stack.
 
 ## Highlights
 
@@ -49,8 +51,10 @@ STEB/
 
 ## Installation
 
-STEB is configured as a `uv` project. Public users do not need Conda or any
-machine-specific base environment. From a fresh clone, install `uv` following
+The current release focuses on the automatic evaluation code and provides a
+`uv`-based setup for the default vLLM-backed evaluation workflow.
+
+From a fresh clone, install `uv` following
 the official instructions, then let `uv` create and manage the project
 environment:
 
@@ -92,65 +96,10 @@ isolated speaker-sim environment from the project metadata:
 uv sync --extra speaker-sim
 ```
 
-### Optional COMET / XCOMET scoring
-
-COMET and XCOMET are disabled by default and are not listed as project extras,
-because `unbabel-comet` cannot be resolved in the same `uv` project environment
-as `vllm==0.23.0`. Keep COMET in a separate `uv` environment and run only Phase
-3 COMET scoring there:
-
-```bash
-uv venv .envs/comet --python 3.10
-uv pip install --python .envs/comet/bin/python \
-  unbabel-comet zhconv zhon sacrebleu tqdm soundfile torchaudio
-
-.envs/comet/bin/python -m evaluation.eval.run_full_eval \
-  --input /path/to/eval_records_merged.jsonl \
-  --output_dir /path/to/eval_output \
-  --src_lang zh --tgt_lang en \
-  --enable_comet \
-  --base_comet_model Unbabel/wmt22-comet-da
-```
-
-For XCOMET, install the same isolated environment and pass an XCOMET model ID or
-local checkpoint path with `--enable_xcomet --xcomet_model <model-or-path>`.
-Model names may be Hugging Face IDs; `unbabel-comet` will download them on first
-use, or you can pass a local checkpoint/cache directory.
-
-### Optional speaker similarity scoring
-
-Speaker similarity follows the Seed-TTS-eval-compatible UniSpeech stack and is
-kept in an isolated environment because of its pinned legacy dependencies:
-
-```bash
-uv venv .envs/speaker-sim --python 3.10
-uv pip install --python .envs/speaker-sim/bin/python \
-  torch torchaudio tqdm soundfile librosa packaging omegaconf \
-  s3prl==0.3.1 fairseq==0.12.2 fire
-
-export SPEAKER_SIM_PYTHON=$PWD/.envs/speaker-sim/bin/python
-export SPEAKER_SIM_CKPT=/path/to/wavlm_large_finetune.pth
-```
-
-Download `wavlm_large_finetune.pth` before enabling speaker similarity:
-
-```text
-https://drive.google.com/file/d/1-aE1NfzpRCLxA4GUxX9ITI3F9LlbtEGP/view
-```
-
-When `ENABLE_SPEAKER_SIM=--enable_speaker_sim` is set, `evaluation/run_eval.sh`
-checks both `SPEAKER_SIM_PYTHON` and `SPEAKER_SIM_CKPT` before scoring.
-Internally, STEB loads the vendored UniSpeech speaker-verification model
-(`wavlm_large` + ECAPA-TDNN), resamples the hypothesis and reference wav files to
-16 kHz, extracts one speaker embedding per file, and reports
-`speaker_similarity` as the cosine similarity between the two embeddings.
-
-For legacy workflows, `requirements.txt` remains available:
-
-```bash
-uv venv --python 3.10
-uv pip install -r requirements.txt
-```
+### Optional Environment Installation
+Optional COMET/XCOMET and speaker-similarity workflows require isolated environments
+because their upstream dependencies conflict with the modern vLLM stack.
+You can install these envs follow [optional install.md](docs/install_optional.md)
 
 ## Data Format
 
@@ -162,8 +111,8 @@ Benchmark JSONL rows should contain source/reference fields:
   "text": "source transcript",
   "text_with_events": "source transcript [Laughter]",
   "translation": {"en": "reference translation"},
-  "emotion": "cheerful",
-  "style": "audiobook narration",
+  "emotion": "...cheerful...",
+  "style": "...audiobook narration...",
   "caption": "reference audio caption",
   "wav_path": "/path/to/reference.wav"
 }
@@ -232,13 +181,19 @@ The default pipeline reports:
 
 - **Text translation:** BLEU.
 - **Speech timing:** duration ratio and SLC.
-- **Paralinguistic consistency:** LLM emotion, style, and non-verbal (NV) sound-event judges.
+- **Paralinguistic consistency:** LLM emotion, scenario style, and non-verbal (NV) sound-event judges.
 
 Optional environments can additionally report:
 
 - **Text translation:** COMET/XCOMET.
 - **Speaker preservation:** UniSpeech speaker similarity.
 
+## Benchmark Dataset
+
+The benchmark dataset will be released on [Huggingface](https://huggingface.co/datasets/cmots/STEB). Now, we have to review data to provide high-quality versions to the community. However, we invite researchers to use our pipeline to generate expressive S2ST data. Full details are provided in [our paper](https://arxiv.org/pdf/2606.25529).
+<img src="src/pipeline.jpg" width="80% " align="center" alt="The overview of dataset." />
+
+*Figure 2. The pipeline and overview of STEB dataset.*
 
 ## Citation
 If you find our paper and code useful in your research, please consider giving a star and citation.
@@ -254,4 +209,3 @@ If you find our paper and code useful in your research, please consider giving a
       url={https://arxiv.org/abs/2606.25529}, 
 }
 ```
-
