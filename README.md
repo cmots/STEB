@@ -3,15 +3,17 @@
 Official code release for **STEB**: A Speech-to-Speech Translation Expressiveness Benchmark for Evaluating Beyond Translation Fidelity, an automatic evaluation toolkit for
 speech-to-speech translation systems. 
 
+<img src="src/institution.jpg" width="100% " align="center"/>
+
+The repository provides the evaluation
+pipeline, feature extraction modules, and metric implementations used to score
+translation fidelity and **emotion**/**scenario style**/**NV** preservation.
+
 <p align="center">
 <a href="https://arxiv.org/pdf/2606.25529"><img src="https://img.shields.io/badge/Paper-ArXiv-red" alt="paper"></a>
 <a href="https://cmots.github.io/steb.github.io/"><img src="https://img.shields.io/badge/Demo-Page-lightgrey" alt="version"></a>
 <a href="https://huggingface.co/datasets/cmots/STEB"><img src="https://img.shields.io/badge/Hugging%20Face-Dataset-yellow" alt="Dataset"></a>
 </p>
-
-The repository provides the evaluation
-pipeline, feature extraction modules, and metric implementations used to score
-translation fidelity and **emotion**/**scenario style**/**NV** preservation.
 
 ## Overview
 
