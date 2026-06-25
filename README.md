@@ -1,14 +1,14 @@
 # STEB
 
-Official code release for **STEB**, an automatic evaluation toolkit for
+Official code release for **STEB**: A Speech-to-Speech Translation Expressiveness Benchmark for Evaluating Beyond Translation Fidelity, an automatic evaluation toolkit for
 speech-to-speech translation systems. The repository provides the evaluation
 pipeline, feature extraction modules, and metric implementations used to score
-translation quality, speech preservation, and paralinguistic consistency.
+translation fidelity and **emotion**/**scenario style**/**NV** preservation.
 
 <p align="center">
-  <b>Paper</b> coming soon |
-  <b>Homepage</b> https://cmots.github.io/steb.github.io/ |
-  <b>Hugging Face</b> https://huggingface.co/datasets/cmots/STEB
+<a href="https://arxiv.org/pdf/2606.25529"><img src="https://img.shields.io/badge/Paper-ArXiv-red" alt="paper"></a>
+<a href="https://cmots.github.io/steb.github.io/"><img src="https://img.shields.io/badge/Demo-Page-lightgrey" alt="version"></a>
+<a href=https://huggingface.co/datasets/cmots/STEB><img src="https://img.shields.io/badge/Hugging%20Face-Dataset-yellow" alt="Dataset"></a>
 </p>
 
 ## Overview
@@ -26,14 +26,9 @@ because their upstream dependencies conflict with the modern vLLM stack.
 
 ## Highlights
 
-- Data joining for benchmark and model result JSONL files.
-- Hypothesis audio packing into Parquet for batched feature extraction.
-- Qwen3-ASR based transcription and word-level timestamp extraction.
-- Qwen3-Omni based audio captioning and Qwen3-Instruct based emotion/style
-  summarization through OpenAI-compatible vLLM servers.
-- BEATs-based sound event detection and event tag insertion.
-- BLEU, duration/SLC, COMET/XCOMET, speaker similarity, and LLM judge scorers.
-- Robust repeated judging for LLM-based metrics.
+- Speech Fidelity: BLEU, COMET, XCOMET, ASR-BLEU, ASR-COMET, etc.
+- Expressiveness Preservation: Emotion, Scenario Style, NVs
+- A Caption-then-summarize method: LALM-as-a-judge and rubrics for expressive S2ST
 
 ## Repository Structure
 
@@ -244,18 +239,19 @@ Optional environments can additionally report:
 - **Text translation:** COMET/XCOMET.
 - **Speaker preservation:** UniSpeech speaker similarity.
 
+
 ## Citation
+If you find our paper and code useful in your research, please consider giving a star and citation.
 
-Citation information will be added with the paper link.
+```bibtex
+@misc{cheng2026steb,
+      title={STEB: A Speech-to-Speech Translation Expressiveness Benchmark for Evaluating Beyond Translation Fidelity}, 
+      author={Sitong Cheng and Weizhen Bian and Songjun Cao and Jin Li and Bei Liu and Chunyang Jiang and Yike Zhang and Weihao Wu and Yiming Li and Chi-Min Chan and Long Ma and Wei Xue},
+      year={2026},
+      eprint={2606.25529},
+      archivePrefix={arXiv},
+      primaryClass={cs.SD},
+      url={https://arxiv.org/abs/2606.25529}, 
+}
+```
 
-## Acknowledgements
-
-This repository includes or interfaces with components from vLLM, Qwen,
-PretrainedSED/BEATs, UniSpeech, SacreBLEU, and COMET. Please also follow the
-licenses and usage terms of the corresponding upstream projects and model
-checkpoints.
-
-## License
-
-Project-level license information will be added before public release.
-Third-party code in subdirectories retains its upstream license.
