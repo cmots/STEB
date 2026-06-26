@@ -193,6 +193,7 @@ Optional environments can additionally report:
 ## Benchmark Dataset
 
 The benchmark dataset will be released on [Huggingface](https://huggingface.co/datasets/cmots/STEB). Now, we have to review data to provide high-quality versions to the community. However, we invite researchers to use our pipeline to generate expressive S2ST data. Full details are provided in [our paper](https://arxiv.org/pdf/2606.25529).
+
 <img src="src/pipeline.jpg" width="80% " align="center" alt="The overview of dataset." />
 
 *Figure 2. The pipeline and overview of STEB dataset.*
